@@ -3,6 +3,7 @@
 namespace App\Modules\WorkerHourlySalaries\Repositories;
 
 use App\Modules\WorkerHourlySalaries\Models\WorkerHourlySalaries;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -21,6 +22,51 @@ class WorkerHourlySalaryRepository
         }
         return
             $request->per_page ? $rows->paginate($request->per_page) : $rows->get();
+    }
+
+    public function findAllByWorker(Request $request, $workerId)
+    {
+        $rows = WorkerHourlySalaries::select()
+            ->with('worker')
+            ->where('worker_id', $workerId);
+
+        return
+            $request->per_page ? $rows->paginate($request->per_page) : $rows->get();
+    }
+
+    public function findCurrentByWorker($workerId)
+    {
+        return WorkerHourlySalaries::select()->with('worker')->where('worker_id', $workerId)->first();
+    }
+
+    public function getMonthlyPrice($workerId)
+    {
+        $allPrices = [];
+        $prevPrice = 0;
+        $price = 0;
+        $rows = WorkerHourlySalaries::select()
+            ->with('worker')
+            ->where('worker_id', $workerId)->orderBy('since')->get();
+
+        $months = range(1, 12);
+        foreach ($months as $month) {
+            foreach ($rows as $entry) {
+                $dateTime = $entry->since;
+                $entryMonthNumber = Carbon::parse($dateTime)->format('n');
+                if ($entryMonthNumber == $month) {
+                    $price = $entry->salary;
+                    $prevPrice = $entry->salary;
+                } elseif ($entryMonthNumber >= $month) {
+                    $price = $prevPrice;
+                };
+            }
+            $allPrices[] = [
+                'month' => $month,
+                'salary' => $price,
+            ];
+        }
+
+        return collect($allPrices);
     }
 
     public function find($id)

@@ -33,6 +33,12 @@ class WorkerHourlySalaryController extends Controller
             $product->find($id)
         );
     }
+    public function showCurrentByWorker(WorkerHourlySalaryRepository $product, $workerId)
+    {
+        return response()->json(
+            $product->findCurrentByWorker($workerId)
+        );
+    }
 
     public function update(WorkerHourlySalaryUpdateRequest $request, WorkerHourlySalaryRepository $product, $id)
     {
@@ -45,5 +51,12 @@ class WorkerHourlySalaryController extends Controller
     public function delete(WorkerHourlySalaryRepository $product, $id)
     {
         $product->delete($id);
+    }
+
+    public function getMonthlyPrice(WorkerHourlySalaryRepository $product, $workerId)
+    {
+        return response()->json(
+            $product->getMonthlyPrice($workerId)
+        );
     }
 }
