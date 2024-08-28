@@ -69,6 +69,59 @@ class WorkerHourlySalaryRepository
         return collect($allPrices);
     }
 
+    public function getMonthlyPriceByYear(
+        Request $request,
+        $workerId
+    ) {
+        $year = $request->year;
+        $allPrices = [];
+        $prevPrice = 0;
+        $price = 0;
+        $rows = WorkerHourlySalaries::select()
+            ->with('worker')
+            ->where('worker_id', $workerId)
+            ->whereYear('since', $year)
+            ->orderBy('since')->get();
+
+        $months = range(1, 12);
+        foreach ($months as $month) {
+            foreach ($rows as $entry) {
+                $dateTime = $entry->since;
+                $entryMonthNumber = Carbon::parse($dateTime)->format('n');
+                $entryYear = Carbon::parse($dateTime)->format('Y');
+
+                if ($entryYear == $year && $entryMonthNumber == $month) {
+                    $price = $entry->salary;
+                    $prevPrice = $entry->salary;
+                } elseif ($entryYear == $year && $entryMonthNumber > $month) {
+                    break;
+                }
+            }
+
+            error_log($price . 'price ' . $month . ' ' . $year);
+            $allPrices[] = [
+                'month' => $month,
+                'salary' => $price ?: $prevPrice,
+            ];
+        }
+
+        return collect($allPrices);
+    }
+
+
+    public function getOneMonthPrice(Request $request, $workerId)
+    {
+        $rows = $this->getMonthlyPrice($workerId);
+        foreach ($rows as $row) {
+            error_log($row['month']);
+            error_log($request->month . ' request');
+            if ($row['month'] == $request->month) {
+                error_log($row['month'] . ' first');
+                return $row['salary'];
+            }
+        }
+    }
+
     public function find($id)
     {
         return

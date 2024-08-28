@@ -12,6 +12,7 @@ Route::controller(WorkerHourlySalaryController::class)->group(function () {
         Route::get('{id}', 'show');
         Route::get('worker/{workerId}', 'showCurrentByWorker');
         Route::get('months/worker/{workerId}', 'getMonthlyPrice');
+        Route::get('months/worker/{workerId}/year', 'getMonthlyPriceByYear');
         Route::put('{id}', 'update');
         Route::delete('{id}', 'delete');
     });

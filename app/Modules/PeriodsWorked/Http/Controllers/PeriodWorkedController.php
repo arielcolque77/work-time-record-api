@@ -26,6 +26,21 @@ class PeriodWorkedController extends Controller
         );
     }
 
+    public function monthlyReportByWorker(PeriodWorkedRepository $periodWorked, Request $request, $workerId)
+    {
+        return response()->json(
+            $periodWorked->monthlyReportByWorker($request, $workerId)
+        );
+    }
+
+    public function monthlyReport(PeriodWorkedRepository $periodWorked, Request $request)
+    {
+        return response()->json(
+            $periodWorked->monthlyReport($request)
+        );
+    }
+
+
     public function store(PeriodWorkedStoreRequest $request, PeriodWorkedRepository $product)
     {
         return response()->json(

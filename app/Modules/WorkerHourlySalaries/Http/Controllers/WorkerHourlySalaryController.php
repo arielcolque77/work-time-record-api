@@ -59,4 +59,10 @@ class WorkerHourlySalaryController extends Controller
             $product->getMonthlyPrice($workerId)
         );
     }
+    public function getMonthlyPriceByYear(WorkerHourlySalaryRepository $product, Request $request, $workerId)
+    {
+        return response()->json(
+            $product->getMonthlyPriceByYear($request, $workerId)
+        );
+    }
 }

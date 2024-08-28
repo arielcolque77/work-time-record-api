@@ -11,7 +11,7 @@ class WorkerRepository
     public function findAll(Request $request)
     {
         $rows = Workers
-            ::select();
+            ::select()->with('periodsWorked');
 
         if ($request->search) {
             $rows = $rows->where(function ($subQuery) use ($request) {
@@ -24,8 +24,8 @@ class WorkerRepository
 
     public function find($id)
     {
-        return
-            Workers::find($id);
+
+        return Workers::with('periodsWorked')->find($id);
     }
 
     public function create($modelData): Workers

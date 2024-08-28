@@ -11,4 +11,9 @@ class Workers extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'color', 'code'];
+
+    public function periodsWorked()
+    {
+        return $this->hasMany(\App\Modules\PeriodsWorked\Models\PeriodsWorked::class, "worker_id", "id");
+    }
 }

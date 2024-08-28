@@ -9,6 +9,8 @@ Route::controller(PeriodWorkedController::class)->group(function () {
     Route::prefix('periods-worked')->group(function () {
         Route::get('/', 'index');
         Route::get('/worker/{worker_id}', 'indexByWorker');
+        Route::get('/report/worker/{worker_id}', 'monthlyReportByWorker');
+        Route::get('/report', 'monthlyReport');
         Route::post('/', 'store');
         Route::get('{id}', 'show');
         Route::put('{id}', 'update');
