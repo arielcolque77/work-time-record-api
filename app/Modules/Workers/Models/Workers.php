@@ -10,7 +10,7 @@ class Workers extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'color', 'code'];
+    protected $fillable = ['name', 'color', 'code', 'active'];
 
     public function periodsWorked()
     {

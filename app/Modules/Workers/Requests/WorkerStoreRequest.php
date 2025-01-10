@@ -17,6 +17,7 @@ class WorkerStoreRequest extends FormRequest
             'name' => ['required'],
             'color' => ['required'],
             'code' => ['required'],
+            'active' => ['nullable'],
         ];
     }
 }
